@@ -1,0 +1,55 @@
+ 
+
+body {
+
+
+             margin: 0px;
+             overflow: hidden;
+             width: 100%;
+ }
+
+
+
+
+
+  /* padding-left: 20px;
+  padding-top: 20px; */
+}
+
+circle {
+  fill: #DE2B5B;
+  opacity: 0.2;
+}
+
+text {
+  font-family: sans-serif;
+}
+
+.tick text {
+  font-size: 2.7em;
+  fill: #635F5D;
+}
+
+.tick line {
+  stroke: #C0C0BB;
+}
+
+.axis-label {
+  font-size: 5em;
+  fill: #8E8883;
+}
+
+.title {
+  font-size: 3.7em;
+  fill: #635F5D;
+}
+
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 150px;
+  height: 45px;
+  pointer-events: none;
+  background-color: wheat;
+}

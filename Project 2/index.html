@@ -1,0 +1,574 @@
+<!-- http://eve.kean.edu/~niedzwid/CPS4745/testing/ -->
+
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Project 2</title>
+    <link rel="stylesheet" href="mainPage.css">
+
+    <link rel="stylesheet" href="loginModal.css">
+    <link rel="stylesheet" href="d3.css">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.12.0/d3.js"> </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- ADDING d3 -->
+
+
+    <script  type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.5/jquery.csv.js"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+
+
+  </head>
+  <body>
+
+    <div class="options">
+
+        <div class="optionsMenu">
+                      <div class="dropdown">
+                        <button class="dropbtn">File</button>
+                        <div class="dropdown-options">
+                          <p id="csv">Load CSV file</p>
+                            <input type="file" type="button" text="upload here" id="files"  class="form-control" accept=".csv" required hidden />
+
+                            <p class="validLoginCheck">Load DB1</p>
+                            <p class="validLoginCheck">Load DB2</p>
+                            <p class="validLoginCheck">Load DB3</p>
+
+                            <p id="exit">Exit</p>
+                        </div>
+                      </div>
+
+
+
+
+                      <div class="dropdown">
+                        <button class="dropbtn">View</button>
+                          <div class="dropdown-options">
+                                <div class="view">
+                                    <p id=line>Line</p>
+                                    <p id="pie">Pie</p>
+                                    <p id="bar">Bar</p>
+                                    <p id="map">Map</p>
+                                    <p id="d3map">D3</p>
+                              </div>
+                          </div>
+                      </div>
+
+
+                    <div class="dropdown">
+                        <button class="dropbtn">Settings</button>
+                             <div class="dropdown-options">
+                                <p type="button" id="settings" data-toggle="modal" data-target="#userSettings"> Settings </p>
+                            </div>
+                    </div>
+
+
+                      <div class="dropdown">
+                          <button class="dropbtn">Help</button>
+                          <div class="dropdown-options">
+                                <p type="button" id="info" data-toggle="modal" data-target="#exampleModalCenter"> Info </p>
+                                <p type="button" id="client" data-toggle="modal" data-target="#exampleModalCenter1"> Client </p>
+                          </div>
+                      </div>
+
+
+          </div>
+
+
+
+
+
+
+
+        <div class="optionsContainer">
+
+
+
+
+
+            <div class="displayWindow">
+                  <p>“Please select one of the following choice, and then run one of the graph in the View menu.</p>
+                  <p>Note: The empty, NULL or NaN value will be excluded </p>
+
+
+      <form>
+
+        <fieldset id="fieldSet">
+        <legend>Please choose a chart to update </legend>
+
+        <p> <input id="radioOptions" type="radio" name="dbchange" value="AvgWages" > AvgWages(Bar,Line)  </p>
+        <p> <input id="radioOptions1" type="radio" name="dbchange" value="EstimatedPopulation" > EstimatedPopulation(Bar,Line)  </p>
+        <p> <input id="radioOptions2" type="radio" name="dbchange" value="State" > State(Bar,Pie) </p>
+
+
+        <label for="avgWagesSlider"> Avg Wages</label>
+        <div class="avgWagesSlider">
+          <input type="range" min="1" max="100000" value="1" class="slider" id="myRange">
+            <p>Value: <span id="avgWageSlide"></span></p>
+            <p>Average: <span id="avgWage"> </span> </p>
+        </div>
+
+
+
+        <label for="populationSlider">Population</label>
+        <div class="slidecontainer">
+          <input type="range" id="popRange" min="1" max="100" value="50" class="slider" >
+          <p>Value: <span id="avgPopSlide"></span></p>
+          <p>Average: <span id="avgPopulation"> </span> </p>
+
+        </div>
+
+        <p> <input type="checkbox" class="applyChanges" value="changes" style="width:20px;height:20px;" > Apply the settings to Line, Pie, Bar charts  </p>
+
+        <p id="submitBtn">  <input class="saveToDb" type="submit" value="Save to database"> </p>
+
+        </fieldset>
+    </form>
+
+
+              </div>
+
+            </div>
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+      <div class="message">
+
+<div class="spacing">
+
+  <!-- <section class="loginInfo"> -->
+
+                <button class="login" id="loginModal"  style="width:auto;"> Login </button>     <span id="welcomeMessage"> </span>
+
+
+              <!-- <div id="id01" class="loginModal">
+
+              <form class="loginModal-content animate" action="" method="POST" name="login">
+
+                <div class="imgcontainer">
+                  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+
+                </div>
+
+                <div class="container1">
+                  <label for="uname"><b>Username</b></label>
+                  <input type="text" placeholder="Enter Username" id="username" name="userName" required>
+
+                  <label for="psw"><b>Password</b></label>
+                  <input type="password" placeholder="Enter Password" id="password" name="password" required>
+
+                  <button type="submit" id="submit">Login</button>
+
+                </div>
+
+              </form>
+
+            </div> -->
+
+  <!-- </section> -->
+
+<!--
+            <script>
+                    // Get the loginModal
+                    var modal = document.getElementById('id01');
+
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+           </script> -->
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <span id="entireMessage">
+                <div class="messageArea"> <span class="message1"> Begin by importing a file! </span>  <span id=rowCount>  </span>
+                                  <span id="outlier">  </span>
+                </div>
+          </span>
+
+          <!-- <div class="messageArea"> NUMBER OF RECORDS :<span id=rowCount>  </span></div> -->
+
+              <div class="scrollable-content" class= "dialog-window">
+                <table id="parsedTable">
+                    <tbody id="parsed_csv_list"> </tbody>
+                </table>
+                      <div id="table_div"></div>
+
+              </div>
+      </div>
+
+
+
+
+      <div class="graphArea scrollable">
+
+<!-- TEST GRAPH HERE -->
+
+          <p id="graphArea">Graph Area</p>
+
+              <div class="row">
+                    <div class="column" id="regions_averageWaegs" > </div>
+                    <div class="column" id="regions_stateCount"> </div>
+              </div>
+
+
+              <div class="row">
+                <div class="column" id="chart_div"></div>
+                <div class="column" id="barChartEstPop"></div>
+                <div class="column" id="top_x_div"></div>
+                <div class="column" id="barChartStateCount"></div>
+              </div>
+
+              <div class="row">
+                <div class="column" id="curve_average"></div>
+                <div class="column" id="curve_count"></div>
+
+                <svg id="everything"width="1500" height="500" >
+                    <svg id="bod" width="1500" height="500"></svg>
+                </svg>
+              </div>
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="styledModal modal-title" id="exampleModalLongTitle">Help</h5>
+            </div>
+            <div class="modal-body">
+            <p>Daniel Niedzwiedzki</p>
+            <p>Data Visualization</p>
+            <p>October 20th</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class=" styledModal modal-title" id="exampleModalLongTitle">Client Info</h5>
+
+            </div>
+            <div class="modal-body">
+             <p> Name: <span id="os"></span> </p>
+             <p> Version: <span id="version"></span> </p>
+             <p>Type: <span id="type"></span> </p>
+             <p> Cookies Enabled: <span id="cookies"></span> </p>
+             <p> Javascript Enabled: <span id="js"></span> </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <span hidden type="button" id="successModalBTN" data-toggle="modal" data-target="#successModal" ></span>
+            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="styledModal modal-body">
+                        <h2> File Loaded Successfully! </h2>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+            <span hidden type="button" id="loginFullModalBTN" data-toggle="modal" data-target="#loginFullModal" ></span>
+                  <div class="modal fade" id="loginFullModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <!-- <div class="styledModal modal-body">
+                              <input type="username" name="" value="">
+                              <input type="password" name="" value="">
+                        </div> -->
+
+
+
+
+                        <div class="spacing">
+
+                          <section class="loginInfo">
+
+                                        <!-- <button class="login" id="loginModal" onclick="document.getElementById('id01').style.display='block'" style="width:auto;"> Login </button>     <span id="welcomeMessage"> </span> -->
+
+
+                                      <form class="loginModal-content animate" action="" method="POST" name="login">
+
+
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">&times;</span>
+                                          </button>
+
+
+
+                                        <div class="container1">
+                                          <label for="uname"><b>Username</b></label>
+                                          <input type="text" placeholder="Enter Username" id="username" name="userName" required>
+
+                                          <label for="psw"><b>Password</b></label>
+                                          <input type="password" placeholder="Enter Password" id="password" name="password" required>
+
+                                          <button type="submit" id="submit">Login</button>
+
+                                        </div>
+
+                                      </form>
+
+
+
+                          </section>
+
+
+                                    <!-- <script>
+                                            // Get the loginModal
+                                            var modal = document.getElementById('id01');
+
+                                            // When the user clicks anywhere outside of the modal, close it
+                                            window.onclick = function(event) {
+                                                if (event.target == modal) {
+                                                    modal.style.display = "none";
+                                                }
+                                            }
+                                   </script> -->
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+
+
+
+
+            <span hidden type="button" id="errorBtn" data-toggle="modal" data-target="#errorModal" ></span>
+                  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="styledModal modal-body">
+                              <h2> Error: Please upload a file first </h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+
+<!-- WRONG INFO MODAL -->
+                  <span hidden type="button" id="wrongDataModal" data-toggle="modal" data-target="#wrongData" ></span>
+                        <div class="modal fade" id="wrongData" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="styledModal modal-body">
+                                    <h2> Wrong user/pass provides</h2>
+                                    <h2>Please try again</h2>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+
+<!-- welcome modal -->
+                        <span hidden type="button" id="welcomeModal" data-toggle="modal" data-target="#welcome" ></span>
+                              <div class="modal fade" id="welcome" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle3" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                  <div class="modal-content">
+                                    <div class="styledModal modal-body">
+                                          <h2>Welcome <span id="welcomeName">  </span> </h2>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+
+                              <span hidden type="button" id="logoutModal" data-toggle="modal" data-target="#logout" ></span>
+                                    <div class="modal fade" id="logout" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle4" aria-hidden="true">
+                                      <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                          <div class="styledModal modal-body">
+                                                <h2>Sucessfully Logged out  </h2>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+
+                                    <span hidden type="button" id="saveToDbModalBTN" data-toggle="modal" data-target="#savetoDbModal" ></span>
+                                          <div class="modal fade" id="savetoDbModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle5" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                              <div class="modal-content">
+                                                <div class="styledModal modal-body">
+                                                      <h2>Sucessfully saved changed to database! </h2>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <span hidden type="button" id="needsLginBTN" data-toggle="modal" data-target="#needsLgin" ></span>
+                                                <div class="modal fade" id="needsLgin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle7" aria-hidden="true">
+                                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="styledModal modal-body">
+                                                            <h2> Please log in before accessing this data! </h2>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+
+
+
+
+
+                                  <span hidden type="button" id="userLoginBTN" data-toggle="modal" data-target="#userLoginModal" ></span>
+                                        <div class="modal fade" id="userLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle6" aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                              <div class="styledModal modal-body">
+                                                    <h2> Please log in before accessing this data! </h2>
+                                              </div>
+                                            </div>
+                                          </div>
+                                      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                  <!-- user settings modal -->
+              <div class="modal fade" id="userSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                          <h5 class="styledModal modal-title" id="exampleModalLongTitle">User Info</h5>
+                        </div>
+                        <div class="modal-body">
+                          <p>Name : <span id="userName" ></span> </p>
+                          <p>Login: <span id="userLogin"></span></p>
+                          <p>Id : <span id="userId" ></span> </p>
+                          <p>Gender: <span id="userGender"></span> </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+
+
+  <script type="text/javascript" src="userCheck1.js"> </script>
+  <script type="text/javascript" src="loadFromDB.js"></script>
+  <script type="text/javascript" src="helperFunctions.js" defer></script>
+  <script type="text/javascript" src="drawCharts.js" ></script>
+  <script type="text/javascript" src="mainPage1.js"> </script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
